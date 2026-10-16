@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>TicketFlow — Synthetic Basic Demo</title>
+  <link rel="stylesheet" href="prototype.css">
+  <script defer src="demo-model.js"></script>
+  <script defer src="prototype.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <aside class="sidebar">
+    <a class="brand" href="#dashboard"><span class="brand-icon" aria-hidden="true">T</span>TicketFlow<span class="edition">BASIC</span></a>
+    <p class="nav-label">YOUR WORKSPACE · SIMULATED</p>
+    <nav aria-label="Demo pages">
+      <a href="#dashboard"><span aria-hidden="true">◫</span>Dashboard</a>
+      <a href="#my-tickets"><span aria-hidden="true">☷</span>My Tickets</a>
+      <a href="#create-ticket"><span aria-hidden="true">＋</span>Create Ticket</a>
+      <a href="#ticket-details"><span aria-hidden="true">▤</span>Ticket Details</a>
+    </nav>
+    <div class="sidebar-note"><span class="live-dot" aria-hidden="true"></span> Offline & in memory<p>No account. No backend.<br>Nothing is saved on reload.</p></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><span class="pill demo-pill">DEMO ONLY</span><span class="topbar-copy">Synthetic fixtures · Not security evidence</span>
+      <label class="role-label" for="view-role">Simulate view <select id="view-role"><option value="requester">Requester</option><option value="agent">Agent</option><option value="manager">Manager</option></select></label>
+    </header>
+    <main id="main" tabindex="-1">
+      <div class="notice"><strong>DEMO ONLY — fictional data and simulated users.</strong> Do not enter confidential or personal information. All changes exist only in this page memory and are discarded on reset or reload. The view selector is not authentication. All shipped fixtures, including internal-note examples, are public and inspectable. This is not the live TicketFlow application.</div>
+      <noscript><div class="error">JavaScript is needed for this offline demo. No live application is available here.</div></noscript>
+      <p id="announcement" role="status" aria-live="polite"></p>
+      <section id="dashboard" class="page" aria-labelledby="dashboard-title">
+        <div class="page-heading"><div><p class="eyebrow">THE BIG PICTURE</p><h1 id="dashboard-title" tabindex="-1">A clearer support queue.</h1><p class="subtitle">A little visibility. A lot less guesswork.</p></div><a class="button primary" href="#create-ticket">＋ Create ticket · Demo</a></div>
+        <p class="scope"></p><div id="metrics" class="metrics"></div>
+        <div class="two-column"><article class="card"><div class="card-heading"><h2>Queue by status</h2><a href="#my-tickets">View tickets →</a></div><div id="status-chart"></div></article>
+        <article class="card accent-card"><p class="eyebrow">HOW TO EXPLORE</p><h2>One queue. Three perspectives.</h2><p>Switch the simulated view to see owned, assigned or manager-wide fixtures. Open a ticket to compare public discussion and internal notes.</p><p class="small">Fixed demo clock: <time>15 Oct 2026, 12:00 UTC</time>. Not a live SLA monitor.</p><button id="reset-demo" class="button secondary" type="button">Reset fixtures · Demo only</button></article></div>
+        <article class="card"><div class="card-heading"><h2>Recent tickets</h2><span class="muted">Synthetic activity</span></div><div id="recent-tickets" class="ticket-cards"></div></article>
+      </section>
+      <section id="my-tickets" class="page" hidden aria-labelledby="tickets-title">
+        <div class="page-heading"><div><p class="eyebrow">KEEP THINGS MOVING</p><h1 id="tickets-title" tabindex="-1">My Tickets</h1><p class="subtitle">Find the next thing that needs your attention.</p></div><a class="button primary" href="#create-ticket">＋ Create ticket · Demo</a></div><p class="scope"></p>
+        <div class="card"><div class="filters"><label>Search fixtures<input id="search" type="search" maxlength="100" placeholder="Reference or subject"></label><label>Status<select id="status-filter"><option value="">All statuses</option><option>NEW</option><option>TRIAGED</option><option>ASSIGNED</option><option>IN_PROGRESS</option><option>RESOLVED</option><option>CLOSED</option><option>CANCELLED</option></select></label><label>Priority<select id="priority-filter"><option value="">All priorities</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select></label><button id="clear-filters" type="button" class="button secondary">Clear filters</button></div>
+        <p id="result-count" class="small" role="status"></p><p class="small muted">On narrow screens, scroll the ticket table horizontally. Keyboard users can focus the table region.</p><div class="table-scroll" role="region" aria-label="Synthetic ticket table, horizontally scrollable" tabindex="0"><table><caption class="sr-only">Simulated visible tickets</caption><thead><tr><th>Ticket / subject</th><th>Priority</th><th>Status</th><th>Deadline · UTC</th><th>Action</th></tr></thead><tbody id="ticket-rows"></tbody></table></div><div id="empty-state" class="empty" hidden><h2>No matching fixtures</h2><p>Try another search, clear the filters, or switch the simulated view.</p></div></div>
+      </section>
+      <section id="create-ticket" class="page" hidden aria-labelledby="create-title">
+        <p class="eyebrow">LET'S GET IT SORTED</p><h1 id="create-title" tabindex="-1">Create Ticket</h1><p class="subtitle">Simulate a request. No message or data leaves this page.</p>
+        <div class="two-column"><div class="card"><p id="create-guidance"></p><p id="create-error" class="error" role="alert" hidden></p>
+          <form id="create-form" novalidate>
+            <label>Subject (required)<input name="subject" required maxlength="250" placeholder="Example: Fictional workspace access" autocomplete="off"></label>
+            <div class="fields"><label>Category (required)<select name="category" required><option value="">Choose a category</option><option>Application</option><option>Network</option><option>Database</option><option>Access & Identity</option></select></label><label>Priority (required)<select name="priority" required><option>P3</option><option>P1</option><option>P2</option><option>P4</option></select></label></div>
+            <label>Description (required)<textarea name="description" required maxlength="2000" rows="6" placeholder="Use fictional example text only." aria-describedby="description-help"></textarea></label><p id="description-help" class="small muted">Demo limit: 2,000 characters, not a production API contract. Text stays in memory until reset/reload.</p>
+            <button id="create-submit" type="submit" class="button primary">Simulate creation · DEMO ONLY</button>
+          </form>
+        </div><aside class="card accent-card"><p class="eyebrow">WHAT HAPPENS HERE?</p><h2>A request, without the plumbing.</h2><ol><li>Choose the Requester simulated view.</li><li>Enter fictional content.</li><li>See a NEW ticket in the local queue.</li></ol><p>No identity mapping, transaction, notification or Oracle operation takes place. Reloading discards the request.</p></aside></div>
+      </section>
+      <section id="ticket-details" class="page" hidden aria-labelledby="details-title"><p class="eyebrow">CONTEXT IN ONE PLACE</p><h1 id="details-title" tabindex="-1">Ticket Details</h1><div id="detail-content"></div></section>
+      <footer>TicketFlow Basic · DEMO ONLY · Synthetic client-side simulation · Security gates unchanged</footer>
+    </main>
+  </div>
+</body>
+</html>
