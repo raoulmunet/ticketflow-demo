@@ -24,6 +24,7 @@
   </aside>
   <div class="workspace">
     <header class="topbar"><span class="pill demo-pill">DEMO ONLY</span><span class="topbar-copy">Synthetic fixtures · Not security evidence</span>
+      <button id="take-tour" class="button secondary" type="button">Take a Tour</button>
       <label class="role-label" for="view-role">Simulate view <select id="view-role"><option value="requester">Requester</option><option value="agent">Agent</option><option value="manager">Manager</option></select></label>
     </header>
     <main id="main" tabindex="-1">
@@ -57,5 +58,9 @@
       <footer>TicketFlow Basic · DEMO ONLY · Synthetic client-side simulation · Security gates unchanged</footer>
     </main>
   </div>
+  <dialog id="guided-tour" aria-labelledby="tour-title" aria-describedby="tour-copy">
+    <p id="tour-counter" class="small" aria-live="polite"></p><h2 id="tour-title" tabindex="-1"></h2><p id="tour-copy"></p>
+    <div class="tour-controls"><button id="tour-back" class="button secondary" type="button">Back</button><button id="tour-skip" class="button secondary" type="button">Skip</button><button id="tour-next" class="button primary" type="button">Next</button></div>
+  </dialog>
 </body>
 </html>

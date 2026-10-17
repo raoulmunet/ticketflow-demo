@@ -12,6 +12,78 @@
   function detailLink(ticket, text) { const link = node("a", text || ticket.subject); link.href = `#ticket-details/${ticket.ref}`; return link; }
   function deadline(value) { return new Date(value).toLocaleString("en-GB", { timeZone: "UTC", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", hour12: false }) + " UTC"; }
   function announce(text) { $("announcement").textContent = text; }
+  // Presentation-only tour: no model mutations or simulated role changes.
+  const tour = { active: false, index: 0, target: null, route: null, pending: false, focus: null };
+  const tourSteps = [
+    ["Demo, not production", ".notice", "Use fictional text only. Never enter confidential or personal information. Changes live only in memory; this is not real authentication."],
+    ["Three perspectives", "#view-role", "Requester, Agent and Manager are simulated views. This tour keeps your current role and never grants access."],
+    ["Your dashboard", "#metrics", "These indicators describe only the tickets visible in your current simulated view.", "dashboard"],
+    ["Find a ticket", "#my-tickets .filters", "Search and filter fictional tickets. Your existing filters are preserved throughout the tour.", "my-tickets"],
+    ["Create safely", "#create-form", "Only Requester can simulate creation. Use fictional content; the tour never fills or submits this form.", "create-ticket"],
+    ["Ticket context", "#detail-content .detail-meta", "This existing ticket comes from your current visible queue. No hidden ticket is opened.", "details"],
+    ["Discussion and history", "#detail-content .history", "Public discussion and history follow the current simulated role. Internal notes are excluded from Requester projections. All shipped fixtures are public examples.", "details"],
+    ["Available actions", "#detail-content .two-column > aside.card", "Actions depend on role and status; closed and cancelled tickets are read-only. Nothing is executed by the tour. Finish to explore; reset or reload discards changes.", "details"]
+  ];
+  function hasDrafts() {
+    return [...document.querySelectorAll("#create-form, #detail-content form")].some(form => [...form.elements].some(control => {
+      if (control instanceof HTMLTextAreaElement || control instanceof HTMLInputElement) return control.value !== control.defaultValue;
+      if (control instanceof HTMLSelectElement) {
+        const original = [...control.options].find(option => option.defaultSelected) || control.options[0];
+        return control.value !== original?.value;
+      }
+      return false;
+    }));
+  }
+  function stopTour(message) {
+    if (!tour.active) return;
+    tour.active = false; tour.pending = false;
+    tour.target?.classList.remove("tour-target"); tour.target = null;
+    if ($("guided-tour").open) $("guided-tour").close();
+    const focus = tour.focus?.isConnected ? tour.focus : $("take-tour"); focus.focus();
+    if (message) announce(message);
+  }
+  function showTourStep() {
+    if (!tour.active) return;
+    const [heading, selector, copy] = tourSteps[tour.index]; const target = document.querySelector(selector);
+    if (!target?.isConnected || !target.getClientRects().length) { stopTour("Tour stopped: this target is unavailable in the current simulated view."); return; }
+    tour.target?.classList.remove("tour-target"); tour.target = target; target.classList.add("tour-target");
+    $("tour-counter").textContent = `Step ${tour.index + 1} of ${tourSteps.length}`;
+    $("tour-title").textContent = heading; $("tour-copy").textContent = copy;
+    $("tour-back").disabled = tour.index === 0;
+    $("tour-next").textContent = tour.index === tourSteps.length - 1 ? "Finish" : "Next";
+    target.scrollIntoView({ block: "start", behavior: "instant" });
+    if (!$("guided-tour").open) $("guided-tour").showModal();
+    $("tour-title").focus({ preventScroll: true });
+  }
+  function moveTour(index) {
+    if (!tour.active || tour.pending) return;
+    tour.index = index;
+    const page = tourSteps[index][3]; let route = page ? `#${page}` : window.location.hash;
+    if (page === "details") {
+      const ticket = demo.list(role)[0];
+      if (!ticket) { stopTour("Tour stopped: no ticket is visible in this simulated view."); return; }
+      route = `#ticket-details/${ticket.ref}`;
+    }
+    tour.route = route;
+    if (route !== window.location.hash) { tour.pending = true; window.location.hash = route; }
+    else showTourStep();
+  }
+  $("take-tour").addEventListener("click", () => {
+    if (tour.active) return;
+    if (hasDrafts()) { announce("Tour not started: finish or manually discard unsaved form changes first. Nothing was discarded."); return; }
+    tour.active = true; tour.focus = $("take-tour"); moveTour(0);
+  });
+  $("tour-back").addEventListener("click", () => { if (tour.index > 0) moveTour(tour.index - 1); });
+  $("tour-next").addEventListener("click", () => {
+    if (tour.index === tourSteps.length - 1) stopTour("Tour finished. Explore with fictional data only."); else moveTour(tour.index + 1);
+  });
+  $("tour-skip").addEventListener("click", () => stopTour("Tour skipped. You can restart with Take a Tour."));
+  $("guided-tour").addEventListener("cancel", event => { event.preventDefault(); stopTour("Tour closed."); });
+  $("view-role").addEventListener("change", () => stopTour("Tour closed because the simulated role changed."));
+  $("reset-demo").addEventListener("click", () => stopTour("Tour closed because fixtures were reset."));
+  new MutationObserver(() => {
+    if (tour.active && !tour.pending && tour.target && (!tour.target.isConnected || !tour.target.getClientRects().length)) stopTour("Tour stopped: the highlighted target changed.");
+  }).observe($("main"), { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
   function isCurrent(form, context) {
     const route = window.location.hash || "#dashboard";
     return form.isConnected && !$("ticket-details").hidden && (route === "#ticket-details" || route === `#ticket-details/${context.ref}`)
@@ -119,6 +191,7 @@
     const disabled = node("button", "Attachments / export · not implemented", "button secondary"); disabled.type = "button"; disabled.disabled = true; info.append(disabled); columns.append(content, info); container.append(meta, columns);
   }
   function render(focus) {
+    if (tour.active && !tour.pending) stopTour("Tour closed because the application view changed.");
     const match = /^#(dashboard|my-tickets|create-ticket|ticket-details)(?:\/(DEMO-\d+))?$/.exec(window.location.hash || "#dashboard"); const page = match ? match[1] : "ticket-details"; const ref = match ? match[2] : "invalid";
     document.querySelectorAll(".page").forEach(section => { section.hidden = section.id !== page; });
     document.querySelectorAll("nav a").forEach(link => { if (link.getAttribute("href") === `#${page}`) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current"); });
@@ -140,7 +213,10 @@
   });
   $("reset-demo").addEventListener("click", () => { demo.reset(); $("create-form").reset(); $("create-error").hidden = true; ["search", "status-filter", "priority-filter"].forEach(id => { $(id).value = ""; }); render(false); announce("DEMO ONLY: fixtures reset. All simulated creations discarded."); });
   window.addEventListener("hashchange", () => {
+    const tourNavigation = tour.active && tour.pending && window.location.hash === tour.route;
+    if (tour.active && !tourNavigation) stopTour("Tour closed because the route changed.");
     if (window.location.hash === "#main") { demo.activate(null, null); discardDetailsDrafts(); $("main").focus(); }
     else render(true);
+    if (tourNavigation && tour.active) { tour.pending = false; showTourStep(); }
   }); render(false);
 }());

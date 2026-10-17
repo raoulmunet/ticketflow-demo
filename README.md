@@ -26,6 +26,17 @@ Keep the HTML, CSS and both JavaScript files together.
 All users, tickets, teams, comments and history are synthetic.
 The fixed clock is 15 October 2026, 12:00 UTC, not a live SLA monitor.
 
+## Guided Tour
+
+Choose **Take a Tour** for eight short steps covering the fictional-data warning,
+simulated roles, dashboard, filters, creation, ticket context, discussion/history
+and available actions. Use Back, Next, Skip or Finish; Escape closes the tour.
+The tour keeps your current role and opens only an already-visible synthetic ticket.
+It never creates tickets, submits forms, changes assignments or saves data.
+Finish or manually discard unsaved drafts before starting. Changing route/role
+or resetting fixtures closes the tour. It supports keyboard navigation, mobile
+layouts and reduced motion. Restart it at any time when no draft is pending.
+
 ## Limitations
 
 No Oracle, APEX, backend connection, persistence, real authentication or authorization.
