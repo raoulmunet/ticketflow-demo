@@ -26,6 +26,16 @@ Keep the HTML, CSS and both JavaScript files together.
 All users, tickets, teams, comments and history are synthetic.
 The fixed clock is 15 October 2026, 12:00 UTC, not a live SLA monitor.
 
+## Video walkthrough
+
+The dashboard includes an optional, approximately two-minute video walkthrough hosted
+as a public GitHub Release asset (https://github.com/raoulmunet/ticketflow-demo/releases/tag/video-demo-v1.0.0).
+The video is not downloaded until a visitor starts playback. Playback sends media
+requests to GitHub and its delivery hosts, whereas the ticket simulation remains
+browser-only and in memory. A direct GitHub Release link is available as a fallback.
+The video is a basic demonstration; the Oracle Database / PL/SQL / Oracle APEX
+implementation is a separate, more extensive work in progress.
+
 ## Guided Tour
 
 Choose **Take a Tour** for eight short steps covering the fictional-data warning,
