@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; media-src https://github.com https://release-assets.githubusercontent.com https://objects.githubusercontent.com; connect-src 'none'; base-uri 'none'; form-action 'none'">
   <title>TicketFlow — Synthetic Basic Demo</title>
   <link rel="stylesheet" href="prototype.css">
   <script defer src="demo-model.js"></script>
@@ -33,6 +33,14 @@
       <p id="announcement" role="status" aria-live="polite"></p>
       <section id="dashboard" class="page" aria-labelledby="dashboard-title">
         <div class="page-heading"><div><p class="eyebrow">THE BIG PICTURE</p><h1 id="dashboard-title" tabindex="-1">A clearer support queue.</h1><p class="subtitle">A little visibility. A lot less guesswork.</p></div><a class="button primary" href="#create-ticket">＋ Create ticket · Demo</a></div>
+        <section class="video-showcase card" aria-labelledby="video-showcase-title">
+          <div class="video-showcase-heading"><div><p class="eyebrow">WATCH THE WALKTHROUGH</p><h2 id="video-showcase-title">TicketFlow in two minutes</h2><p class="small">A basic browser-based demonstration with fictional data. The more comprehensive Oracle Database, PL/SQL and APEX application is in development.</p></div></div>
+          <video controls preload="none" playsinline aria-label="TicketFlow interactive demo walkthrough, approximately two minutes">
+            <source src="https://github.com/raoulmunet/ticketflow-demo/releases/download/video-demo-v1.0.0/TicketFlow_LinkedIn_faststart.mp4" type="video/mp4">
+            Your browser cannot play this video.
+          </video>
+          <p class="small">Having trouble playing? <a href="https://github.com/raoulmunet/ticketflow-demo/releases/tag/video-demo-v1.0.0" target="_blank" rel="noopener noreferrer">Watch or download the video on GitHub Releases</a>. Video playback requests media from GitHub; the service desk demo itself remains synthetic and runs in memory.</p>
+        </section>
         <p class="scope"></p><div id="metrics" class="metrics"></div>
         <div class="two-column"><article class="card"><div class="card-heading"><h2>Queue by status</h2><a href="#my-tickets">View tickets →</a></div><div id="status-chart"></div></article>
         <article class="card accent-card"><p class="eyebrow">HOW TO EXPLORE</p><h2>One queue. Three perspectives.</h2><p>Switch the simulated view to see owned, assigned or manager-wide fixtures. Open a ticket to compare public discussion and internal notes.</p><p class="small">Fixed demo clock: <time>15 Oct 2026, 12:00 UTC</time>. Not a live SLA monitor.</p><button id="reset-demo" class="button secondary" type="button">Reset fixtures · Demo only</button></article></div>
