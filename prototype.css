@@ -53,3 +53,10 @@ footer { padding: 2rem 0; color: var(--muted); font-size: .7rem; }.sr-only { pos
 @media (max-width: 700px) { #guided-tour { inset: auto 1rem 1rem 1rem; width: auto; }.topbar #take-tour { max-width: 100%; } }
 @media (prefers-reduced-motion: reduce) { .tour-target { scroll-behavior: auto; }#guided-tour { animation: none; transition: none; } }
 @media (prefers-reduced-motion: no-preference) { .button, nav a { transition: background-color .15s; } }
+
+/* Optional presentation video; no impact on simulated ticket workflows. */
+.video-showcase { margin: 1.2rem 0; }
+.video-showcase-heading h2 { margin: .1rem 0 .35rem; }
+.video-showcase-heading .small { margin: 0 0 .8rem; }
+.video-showcase video { display: block; width: 100%; max-width: 960px; height: auto; aspect-ratio: 16 / 9; background: #18332f; border-radius: 9px; }
+.video-showcase > .small { margin: .8rem 0 0; overflow-wrap: anywhere; }
